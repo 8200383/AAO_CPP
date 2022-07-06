@@ -19,21 +19,21 @@ class ChinesePostmanSolver {
 
         System.out.println("Graph Order: " + this.costMatrix.length);
 
-        //Find odd vertices
+        // Find odd vertices
         LinkedList<Integer> oddVertices = this.findOddVertices(this.costMatrix);
         System.out.println("Odd Vertices: " + Arrays.toString(oddVertices.toArray()));
 
-        //Run FloydWarshall
+        // Run FloydWarshall
         Object[] results = this.performFloydWarshall(this.costMatrix);
         int[][] distance = (int[][]) results[0];
         int[][] next = (int[][]) results[1];
         LinkedList<LinkedList<Integer>> matchings = new LinkedList<>();
 
-        //Find all matching of graph with oddVertices
-        findAllMatchings(matchings, oddVertices, new LinkedList<>());
+        // Find all matching of graph with oddVertices
+        this.findAllMatchings(matchings, oddVertices, new LinkedList<>());
 
         //Finds match with minimum summed weight
-        LinkedList<Integer> bestMatch = findPerfectMatch(matchings, distance);
+        LinkedList<Integer> bestMatch = this.findPerfectMatch(matchings, distance);
         int[][][] multiGraph = this.addEdgesGraph(bestMatch, distance, costMatrix);
 
         LinkedList<Integer> circuit = this.performHierholzer(multiGraph, startVertex, next);
@@ -45,17 +45,22 @@ class ChinesePostmanSolver {
         return circuit;
     }
 
+    /**
+     * Find odd vertices from a cost matrix
+     *
+     * @param costMatrix the cost matrix
+     * @return the list of odd vertices
+     * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
+     */
     private LinkedList<Integer> findOddVertices(int[][] costMatrix) {
 
         int n = costMatrix.length;
         LinkedList<Integer> oddVertices = new LinkedList<>();
 
-        //Finds odd vertices
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { // O(n)
             int neighborsCount = 0;
-            for (int j = 0; j < n; j++) {
-                if ((costMatrix[i][j] != INFINITE)
-                        && (costMatrix[i][j] != 0)) {
+            for (int j = 0; j < n; j++) { // O(n)
+                if (costMatrix[i][j] != INFINITE && costMatrix[i][j] != 0) {
                     neighborsCount += 1;
 
                 }
@@ -64,8 +69,8 @@ class ChinesePostmanSolver {
                 oddVertices.add(i);
             }
         }
-        return oddVertices;
 
+        return oddVertices;
     }
 
     private void findAllMatchings(LinkedList<LinkedList<Integer>> matchings,
@@ -250,14 +255,21 @@ class ChinesePostmanSolver {
         return circuit;
     }
 
+    /**
+     * Perform Floyd Warshall Algorithm on a cost matrix
+     *
+     * @param costMatrix the cost matrix
+     * @return an object with distance and next
+     * @implNote Big O(n^2) = O(|V|^2)
+     */
     public Object[] performFloydWarshall(int[][] costMatrix) {
         int n = costMatrix.length;
         int[][] distance = new int[n][n];
         int[][] next = new int[n][n];
 
-        //Initialization
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        // Initialization O(n^2)
+        for (int i = 0; i < n; i++) { // O(n)
+            for (int j = 0; j < n; j++) { // O(n)
                 distance[i][j] = costMatrix[i][j];
                 if (costMatrix[i][j] != 0 && costMatrix[i][j] != INFINITE) {
                     next[i][j] = j;
@@ -265,14 +277,13 @@ class ChinesePostmanSolver {
             }
         }
 
-        //Algorithm Body
-        for (int k = 0; k < n; k++) {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
+        // Algorithm Body O(n^3)
+        for (int k = 0; k < n; k++) { // O(n)
+            for (int i = 0; i < n; i++) { // O(n)
+                for (int j = 0; j < n; j++) { // O(n)
                     if (distance[i][j] > distance[i][k] + distance[k][j]) {
                         distance[i][j] = distance[i][k] + distance[k][j];
                         next[i][j] = next[i][k];
-
                     }
                 }
             }
