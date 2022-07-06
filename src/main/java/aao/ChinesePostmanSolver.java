@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+@SuppressWarnings({"NumberEquality", "ConstantConditions", "ConditionalBreakInInfiniteLoop"})
 class ChinesePostmanSolver {
     private static final int INFINITE = Integer.MAX_VALUE / 2;
     private final int[][] costMatrix;
@@ -12,34 +13,41 @@ class ChinesePostmanSolver {
         this.costMatrix = costMatrix;
     }
 
+    /**
+     * Solve the Chinese Postman Problem
+     *
+     * @param startVertex the vertex to start the circuit
+     * @return the circuit
+     * @implNote Big O(n^3)
+     */
     public List<Integer> solve(int startVertex) {
-        if (!this.checkSymmetry(this.costMatrix)) {
+        if (!this.checkSymmetry(this.costMatrix)) { // O(n^2)
             throw new IllegalArgumentException("Cannot Solve Directed Graphs...");
         }
 
         System.out.println("Graph Order: " + this.costMatrix.length);
 
         // Find odd vertices
-        LinkedList<Integer> oddVertices = this.findOddVertices(this.costMatrix);
+        LinkedList<Integer> oddVertices = this.findOddVertices(this.costMatrix); // O(n^2)
         System.out.println("Odd Vertices: " + Arrays.toString(oddVertices.toArray()));
 
         // Run FloydWarshall
-        Object[] results = this.performFloydWarshall(this.costMatrix);
+        Object[] results = this.performFloydWarshall(this.costMatrix); // O(n^2)
         int[][] distance = (int[][]) results[0];
         int[][] next = (int[][]) results[1];
         LinkedList<LinkedList<Integer>> matchings = new LinkedList<>();
 
         // Find all matching of graph with oddVertices
-        this.findAllMatchings(matchings, oddVertices, new LinkedList<>());
+        this.findAllMatchings(matchings, oddVertices, new LinkedList<>()); // O(n)
 
         //Finds match with minimum summed weight
-        LinkedList<Integer> bestMatch = this.findPerfectMatch(matchings, distance);
-        int[][][] multiGraph = this.addEdgesGraph(bestMatch, distance, this.costMatrix);
+        LinkedList<Integer> bestMatch = this.findPerfectMatch(matchings, distance);  // O(n^2)
+        int[][][] multiGraph = this.addEdgesGraph(bestMatch, distance, this.costMatrix);  // O(n^2)
 
-        LinkedList<Integer> circuit = this.performHierholzer(multiGraph, startVertex, next);
+        LinkedList<Integer> circuit = this.performHierholzer(multiGraph, startVertex, next); // O(n^3)
         System.out.println("Circuit: " + Arrays.toString(circuit.toArray()));
 
-        int totalCost = this.getTotalCost(circuit, this.costMatrix);
+        int totalCost = this.getTotalCost(circuit, this.costMatrix); // O(n^2)
         System.out.println("Total Cost: " + totalCost);
 
         return circuit;
@@ -62,7 +70,6 @@ class ChinesePostmanSolver {
             for (int j = 0; j < n; j++) { // O(n)
                 if (costMatrix[i][j] != INFINITE && costMatrix[i][j] != 0) {
                     neighborsCount += 1;
-
                 }
             }
             if (neighborsCount % 2 != 0) {
@@ -75,9 +82,10 @@ class ChinesePostmanSolver {
 
     /**
      * Finds all matching vertices on the graph with oddVertices
+     *
      * @param matchings empty list of matching vertices
-     * @param vertices list of all vertices
-     * @param visited list of visited vertices
+     * @param vertices  list of all vertices
+     * @param visited   list of visited vertices
      * @implNote Big O(n) = O(|V|)
      */
 
@@ -113,8 +121,9 @@ class ChinesePostmanSolver {
 
     /**
      * Finds the perfect match with the minimum summed weight
+     *
      * @param matchings list of matching vertices
-     * @param distance matrix of distances obtained in the Floyd-Warshall algorithm
+     * @param distance  matrix of distances obtained in the Floyd-Warshall algorithm
      * @return list of best matching vertices
      * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
      */
@@ -248,10 +257,12 @@ class ChinesePostmanSolver {
      */
     private LinkedList<Integer> getFloydWarshallPath(int from, int to, int[][] next) {
         LinkedList<Integer> path = new LinkedList<>();
-        while (i != j) {
-            i = next[i][j];
-            path.add(i);
+
+        while (from != to) { // O(n)
+            from = next[from][to]; // O(1)
+            path.add(from); // O(1)
         }
+
         return path;
     }
 
@@ -270,50 +281,54 @@ class ChinesePostmanSolver {
 
         int[][][] visitedEdges = new int[n][n][2];
         LinkedList<Integer> circuit = new LinkedList<>();
-        circuit.add(start);
+        circuit.add(startVertex); // O(1)
 
-        while (true) {
-            Integer unvisited = -1;
+        while (true) { // O(n^3)
+            int unvisited = -1;
             int index = 0;
 
-            for (Integer vertice : circuit) {
-                int[] nextEdge = findUnvisitedEdge(vertice, visitedEdges, costMatrix);
+            // O(n) * O(n^2) = O(n*n^2) = O(n^3)
+            for (Integer vertex : circuit) { // O(n)
+                int[] nextEdge = this.findUnvisitedEdge(vertex, visitedEdges, costMatrix); // O(n^2)
                 if (nextEdge != null) {
-                    unvisited = vertice;
+                    unvisited = vertex;
                     break;
                 }
                 index += 1;
             }
 
-            if (unvisited == -1) {
+            // Acontece quando não existe circuito Best O(1) | Worst O(circuit.length) = O(n)
+            if (unvisited == -1) { // while true depends on unvisited = -1
                 break;
             }
 
             LinkedList<Integer> newCircle = new LinkedList<>();
-            newCircle.add(unvisited);
+            newCircle.add(unvisited); // O(1)
 
-            while (true) {
-                int[] nextEdge = findUnvisitedEdge(unvisited, visitedEdges, costMatrix);
 
-                if (nextEdge[2] == 0) {
-                    newCircle.add(nextEdge[1]);
+            while (true) { // Worst Case O(n^2)
+                int[] nextEdge = this.findUnvisitedEdge(unvisited, visitedEdges, costMatrix); // O(n^2)
 
-                } else if (nextEdge[2] == 1) {
-                    newCircle.addAll(getPath(nextEdge[0], nextEdge[1], nextMatrix));
+                if (nextEdge[2] == 0)
+                    newCircle.add(nextEdge[1]); // O(1)
 
+                else if (nextEdge[2] == 1) {
+                    LinkedList<Integer> path = this.getFloydWarshallPath(nextEdge[0], nextEdge[1], nextMatrix); // O(n)
+                    newCircle.addAll(path); // O(n)
                 }
+
 
                 visitedEdges[nextEdge[0]][nextEdge[1]][nextEdge[2]] = 1;
                 visitedEdges[nextEdge[1]][nextEdge[0]][nextEdge[2]] = 1;
                 unvisited = nextEdge[1];
 
-                if (newCircle.getFirst() == newCircle.getLast()) {
+                if (newCircle.getFirst() == newCircle.getLast()) { // O(1)
                     break;
                 }
             }
-            circuit.remove(index);
-            circuit.addAll(index, newCircle);
 
+            circuit.remove(index); // O(n)
+            circuit.addAll(index, newCircle); // O(n)
         }
 
         return circuit;
@@ -351,7 +366,6 @@ class ChinesePostmanSolver {
                     }
                 }
             }
-
         }
 
         return new Object[]{distance, next};
