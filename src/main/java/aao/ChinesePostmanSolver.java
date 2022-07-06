@@ -73,6 +73,14 @@ class ChinesePostmanSolver {
         return oddVertices;
     }
 
+    /**
+     * Finds all matching vertices on the graph with oddVertices
+     * @param matchings empty list of matching vertices
+     * @param vertices list of all vertices
+     * @param visited list of visited vertices
+     * @implNote Big O(n) = O(|V|)
+     */
+
     private void findAllMatchings(LinkedList<LinkedList<Integer>> matchings,
                                   LinkedList<Integer> vertices,
                                   LinkedList<Integer> visited) {
@@ -102,6 +110,14 @@ class ChinesePostmanSolver {
         }
 
     }
+
+    /**
+     * Finds the perfect match with the minimum summed weight
+     * @param matchings list of matching vertices
+     * @param distance matrix of distances obtained in the Floyd-Warshall algorithm
+     * @return list of best matching vertices
+     * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
+     */
 
     private LinkedList<Integer> findPerfectMatch(LinkedList<LinkedList<Integer>> matchings, int[][] distance) {
 
@@ -152,11 +168,19 @@ class ChinesePostmanSolver {
         return multiGraph;
     }
 
+    /**
+     * Check the symmetry of a graph
+     *
+     * @param costMatrix the cost matrix
+     * @return true if the graph is symmetric and false if the graph is not symmetric
+     * @implNote Big O(n^2) = O(|V|^2)
+     */
     public boolean checkSymmetry(int[][] costMatrix) {
         int n = costMatrix.length;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        // O(n^2)
+        for (int i = 0; i < n; i++) { // O(n)
+            for (int j = 0; j < n; j++) { // O(n)
                 if (costMatrix[i][j] != costMatrix[j][i]) {
                     return false;
                 }
@@ -165,27 +189,48 @@ class ChinesePostmanSolver {
         return true;
     }
 
+    /**
+     * Get the total cost for a circuit
+     *
+     * @param circuit    the generated circuit
+     * @param costMatrix the cost matrix
+     * @return the total cost for a circuit
+     * @implNote Big O(n^2) = O(|V|^2)
+     */
     private int getTotalCost(LinkedList<Integer> circuit, int[][] costMatrix) {
         int totalCost = 0;
 
-        for (int i = 0; i < circuit.size() - 1; i++) {
-            totalCost += costMatrix[circuit.get(i)][circuit.get(i + 1)];
+        //O(n^2)
+        for (int i = 0; i < circuit.size() - 1; i++) { //O(n)
+            int u = circuit.get(i); //O(n)
+            int v = circuit.get(i + 1); //O(n)
+
+            totalCost += costMatrix[u][v]; //O(1)
         }
 
         return totalCost;
     }
 
 
-    //Finds first outgoing unvisited edge
-    private Integer[] findUnvisitedEdge(Integer vertex, int[][][] visitedEdges, int[][][] costMatrix) {
+    /**
+     * Find unvisited edge
+     *
+     * @param vertex       the last visited vertex
+     * @param visitedEdges a 3D array of the visited edges
+     * @param costMatrix   the cost matrix
+     * @return the unvisited edge if it exists
+     * @implNote Big O(n^2) = O(|V|^2)
+     */
+    private int[] findUnvisitedEdge(int vertex, int[][][] visitedEdges, int[][][] costMatrix) {
 
-        for (int j = 0; j < costMatrix.length; j++) {
-            for (int k = 0; k < 2; k++) {
+        //O(n^2)
+        for (int j = 0; j < costMatrix.length; j++) { //O(n)
+            for (int k = 0; k < 2; k++) { //O(n)
                 int cost = costMatrix[vertex][j][k];
                 if ((cost != INFINITE) && (cost != 0)
                         && (visitedEdges[vertex][j][k] != 1)) {
 
-                    return new Integer[]{vertex, j, k};
+                    return new int[]{vertex, j, k};
                 }
             }
         }
@@ -215,7 +260,7 @@ class ChinesePostmanSolver {
             int index = 0;
 
             for (Integer vertice : circuit) {
-                Integer[] nextEdge = findUnvisitedEdge(vertice, visitedEdges, costMatrix);
+                int[] nextEdge = findUnvisitedEdge(vertice, visitedEdges, costMatrix);
                 if (nextEdge != null) {
                     unvisited = vertice;
                     break;
@@ -231,7 +276,7 @@ class ChinesePostmanSolver {
             newCircle.add(unvisited);
 
             while (true) {
-                Integer[] nextEdge = findUnvisitedEdge(unvisited, visitedEdges, costMatrix);
+                int[] nextEdge = findUnvisitedEdge(unvisited, visitedEdges, costMatrix);
 
                 if (nextEdge[2] == 0) {
                     newCircle.add(nextEdge[1]);
