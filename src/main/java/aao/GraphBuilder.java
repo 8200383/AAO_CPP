@@ -27,7 +27,7 @@ public class GraphBuilder {
             System.out.println(Arrays.toString(values));
 
             if (values.length != 4) {
-                throw new IllegalStateException(path + " (Has more then 4 columns! Accepted columns are: arc, u, v, cost)");
+                throw new IllegalStateException(path + " (Has more or less then 4 columns! Accepted columns are: arc, u, v, cost)");
             }
 
             String arc = values[0];

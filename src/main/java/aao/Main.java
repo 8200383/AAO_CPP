@@ -1,20 +1,41 @@
 package aao;
 
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
 
-    static public void main(String[] args) throws Exception {
+    static public void main(String[] args) {
+        System.out.println("-".repeat(50));
+        runOne(4, 0, "example_1");
+        System.out.println("-".repeat(50));
+        runOne(4, 0, "example_2");
+        System.out.println("-".repeat(50));
+        runOne(9, 0, "example_3");
+    }
 
-        CPPSolver cpp = GraphBuilder.fromCSV(4, "example_1.csv");
+    static public void runOne(int vertices, int startAt, String path) {
+        CPPSolver cpp;
+
+        try {
+            cpp = GraphBuilder.fromCSV(vertices, path + ".csv");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         System.out.println(Arrays.deepToString(cpp.getArcs()));
 
-        GraphPlotter.plot(cpp.getArcs(), "example_1_output.png");
+        try {
+            GraphPlotter.plot(cpp.getArcs(), path + "_output.png");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         cpp.solve();
-        cpp.printCPT(0);
+        cpp.printCPT(startAt);
 
         System.out.println(cpp.cost());
     }

@@ -204,14 +204,16 @@ public class CPPSolver {
                 }
             } else {
                 int bridgeVertex = path[u][startVertex];
-                if (arcs[u][bridgeVertex] == 0)
+                if (arcs[u][bridgeVertex] == 0) {
                     break; // finished if bridge already used
+                }
                 v = bridgeVertex;
-                for (int i = 0; i < N; i++) // find an unused arc, using bridge last
+                for (int i = 0; i < N; i++) { // find an unused arc, using bridge last
                     if (i != bridgeVertex && arcs[u][i] > 0) {
                         v = i;
                         break;
                     }
+                }
                 arcs[u][v]--; // decrement count of parallel arcs
                 System.out.println("Take arc " + label[u][v].elementAt(arcs[u][v]) + " from " + u + " to " + v + ", cost " + c[u][v]); // use each arc label in turn
             }
