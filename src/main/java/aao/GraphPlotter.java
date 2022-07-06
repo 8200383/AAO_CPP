@@ -15,8 +15,8 @@ public class GraphPlotter {
         StringBuilder dot = new StringBuilder("graph{");
 
         for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j <= i; j++) {
-                if (i != j) {
+            for (int j = 0; j < matrix.length; j++) {
+                if (matrix[i][j] == 1) {
                     dot.append(j).append("--").append(i).append(';');
                 }
             }
