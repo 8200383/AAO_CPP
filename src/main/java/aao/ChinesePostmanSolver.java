@@ -73,6 +73,14 @@ class ChinesePostmanSolver {
         return oddVertices;
     }
 
+    /**
+     * Finds all matching vertices on the graph with oddVertices
+     * @param matchings empty list of matching vertices
+     * @param vertices list of all vertices
+     * @param visited list of visited vertices
+     * @implNote Big O(n) = O(|V|)
+     */
+
     private void findAllMatchings(LinkedList<LinkedList<Integer>> matchings,
                                   LinkedList<Integer> vertices,
                                   LinkedList<Integer> visited) {
@@ -103,6 +111,14 @@ class ChinesePostmanSolver {
 
     }
 
+    /**
+     * Finds the perfect match with the minimum summed weight
+     * @param matchings list of matching vertices
+     * @param distance matrix of distances obtained in the Floyd-Warshall algorithm
+     * @return list of best matching vertices
+     * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
+     */
+
     private LinkedList<Integer> findPerfectMatch(LinkedList<LinkedList<Integer>> matchings, int[][] distance) {
 
         LinkedList<Integer> bestMatching = null;
@@ -124,27 +140,29 @@ class ChinesePostmanSolver {
         return bestMatching;
     }
 
-    private int[][][] addEdgesGraph(LinkedList<Integer> bestMatch,
-                                    int[][] distance, int[][] costMatrix) {
-
+    /**
+     * Builds a multi graph
+     *
+     * @param bestMatch  the best match list
+     * @param distance   the distance matrix
+     * @param costMatrix the cost matrix
+     * @return the multi graph
+     * @implNote Big O(n^2) = O(|V|^2)
+     */
+    private int[][][] addEdgesGraph(LinkedList<Integer> bestMatch, int[][] distance, int[][] costMatrix) {
         int n = costMatrix.length;
         int[][][] multiGraph = new int[n][n][2]; // Maximum 2 edges by pair (i,j)
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++) { // O(n)
+            for (int j = 0; j < n; j++) {  // O(n)
                 multiGraph[i][j][0] = costMatrix[i][j];
                 multiGraph[i][j][1] = (i == j) ? 0 : INFINITE;
-
             }
         }
 
-        for (int i = 0; i < bestMatch.size(); i += 2) {
-            multiGraph[bestMatch.get(i)][bestMatch.get(i + 1)][1]
-                    = distance[bestMatch.get(i)][bestMatch.get(i + 1)];
-
-            multiGraph[bestMatch.get(i + 1)][bestMatch.get(i)][1]
-                    = distance[bestMatch.get(i)][bestMatch.get(i + 1)];
-
+        for (int i = 0; i < bestMatch.size(); i += 2) { // O(n)
+            multiGraph[bestMatch.get(i)][bestMatch.get(i + 1)][1] = distance[bestMatch.get(i)][bestMatch.get(i + 1)];
+            multiGraph[bestMatch.get(i + 1)][bestMatch.get(i)][1] = distance[bestMatch.get(i)][bestMatch.get(i + 1)];
         }
 
         return multiGraph;
