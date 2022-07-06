@@ -44,6 +44,10 @@ public class CPPSolver {
         basicCost = 0;
     }
 
+    public int[][] getArcs() {
+        return this.arcs;
+    }
+
     public float cost() {
         return basicCost + phi();
     }
@@ -196,8 +200,7 @@ public class CPPSolver {
                 for (int p; u != v; u = p) // break down path into its arcs
                 {
                     p = path[u][v];
-                    System.out.println("Take arc " + cheapestLabel[u][p]
-                            + " from " + u + " to " + p);
+                    System.out.println("Take arc " + cheapestLabel[u][p] + " from " + u + " to " + p + ", cost " + c[u][p]);
                 }
             } else {
                 int bridgeVertex = path[u][startVertex];
@@ -210,8 +213,7 @@ public class CPPSolver {
                         break;
                     }
                 arcs[u][v]--; // decrement count of parallel arcs
-                System.out.println("Take arc " + label[u][v].elementAt(arcs[u][v])
-                        + " from " + u + " to " + v); // use each arc label in turn
+                System.out.println("Take arc " + label[u][v].elementAt(arcs[u][v]) + " from " + u + " to " + v + ", cost " + c[u][v]); // use each arc label in turn
             }
         }
     }
