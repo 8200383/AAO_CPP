@@ -1,6 +1,6 @@
 package aao;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * Class for finding and printing the optimal Chinese Postman tour of multi-digraphs.
@@ -182,11 +182,12 @@ public class CPP {
         // delete next 7 lines to be faster, but non-reentrant
         int arcs[][] = new int[N][N];
         int f[][] = new int[N][N];
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 arcs[i][j] = this.arcs[i][j];
                 f[i][j] = this.f[i][j];
             }
+        }
 
         while (true) {
             int u = v;
