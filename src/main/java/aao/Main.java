@@ -10,7 +10,11 @@ public class Main {
 
     static public void runOne(int vertices, int startAt, String path) {
         try {
-            GraphBuilder.fromCSV(vertices, path + ".csv");
+            int[][] matrix = GraphBuilder.fromCSV(path + ".csv", vertices);
+
+            GraphPlotter.plot(matrix, path + "_output");
+
+            new ChinesePostmanSolver(matrix).solve(startAt);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

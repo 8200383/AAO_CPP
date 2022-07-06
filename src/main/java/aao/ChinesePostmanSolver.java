@@ -5,21 +5,25 @@ import java.util.LinkedList;
 
 class ChinesePostmanSolver {
     private static final int INFINITE = Integer.MAX_VALUE / 2;
+    private final int[][] costMatrix;
 
-    public void solve(int[][] costMatrix, int startVertex) {
+    public ChinesePostmanSolver(int[][] costMatrix) {
+        this.costMatrix = costMatrix;
+    }
 
-        if (!this.checkSymmetry(costMatrix)) {
+    public void solve(int startVertex) {
+        if (!this.checkSymmetry(this.costMatrix)) {
             throw new IllegalArgumentException("Cannot Solve Directed Graphs...");
         }
 
-        System.out.println("Graph Order: " + costMatrix.length);
+        System.out.println("Graph Order: " + this.costMatrix.length);
 
         //Find odd vertices
-        LinkedList<Integer> oddVertices = this.findOddVertices(costMatrix);
+        LinkedList<Integer> oddVertices = this.findOddVertices(this.costMatrix);
         System.out.println("Odd Vertices: " + Arrays.toString(oddVertices.toArray()));
 
         //Run FloydWarshall
-        Object[] results = this.performFloydWarshall(costMatrix);
+        Object[] results = this.performFloydWarshall(this.costMatrix);
         int[][] distance = (int[][]) results[0];
         int[][] next = (int[][]) results[1];
         LinkedList<LinkedList<Integer>> matchings = new LinkedList<>();
