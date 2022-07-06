@@ -73,6 +73,14 @@ class ChinesePostmanSolver {
         return oddVertices;
     }
 
+    /**
+     * Finds all matching vertices on the graph with oddVertices
+     * @param matchings empty list of matching vertices
+     * @param vertices list of all vertices
+     * @param visited list of visited vertices
+     * @implNote Big O(n) = O(|V|)
+     */
+
     private void findAllMatchings(LinkedList<LinkedList<Integer>> matchings,
                                   LinkedList<Integer> vertices,
                                   LinkedList<Integer> visited) {
@@ -102,6 +110,14 @@ class ChinesePostmanSolver {
         }
 
     }
+
+    /**
+     * Finds the perfect match with the minimum summed weight
+     * @param matchings list of matching vertices
+     * @param distance matrix of distances obtained in the Floyd-Warshall algorithm
+     * @return list of best matching vertices
+     * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
+     */
 
     private LinkedList<Integer> findPerfectMatch(LinkedList<LinkedList<Integer>> matchings, int[][] distance) {
 
