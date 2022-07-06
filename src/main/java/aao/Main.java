@@ -1,5 +1,9 @@
 package aao;
 
+import guru.nidi.graphviz.engine.Format;
+
+import java.util.List;
+
 public class Main {
 
     static public void main(String[] args) {
@@ -16,9 +20,12 @@ public class Main {
         try {
             int[][] matrix = GraphBuilder.fromCSV(path + ".csv", vertices);
 
-            GraphPlotter.plot(matrix, path + "_output");
+            plotter.plotMatrix(matrix, path + "_output");
 
-            new ChinesePostmanSolver(matrix).solve(startAt);
+            List<Integer> circuit = new ChinesePostmanSolver(matrix).solve(startAt);
+
+            int[] c = circuit.stream().mapToInt(Integer::intValue).toArray();
+            plotter.plotArray(c, path + "_circuit");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

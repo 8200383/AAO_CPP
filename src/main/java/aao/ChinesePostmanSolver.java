@@ -2,6 +2,7 @@ package aao;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 class ChinesePostmanSolver {
     private static final int INFINITE = Integer.MAX_VALUE / 2;
@@ -11,7 +12,7 @@ class ChinesePostmanSolver {
         this.costMatrix = costMatrix;
     }
 
-    public void solve(int startVertex) {
+    public List<Integer> solve(int startVertex) {
         if (!this.checkSymmetry(this.costMatrix)) {
             throw new IllegalArgumentException("Cannot Solve Directed Graphs...");
         }
@@ -40,6 +41,8 @@ class ChinesePostmanSolver {
 
         int totalCost = this.getTotalCost(circuit, costMatrix);
         System.out.println("Total Cost: " + totalCost);
+
+        return circuit;
     }
 
     private LinkedList<Integer> findOddVertices(int[][] costMatrix) {

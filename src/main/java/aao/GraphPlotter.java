@@ -10,8 +10,30 @@ import java.io.File;
 import java.io.IOException;
 
 public class GraphPlotter {
+    private final int width;
+    private final Format format;
+    private final Parser parser;
 
-    public static void plot(int[][] matrix, String outputPath) throws IOException {
+    public GraphPlotter(int width, Format format) {
+        this.width = width;
+        this.format = format;
+
+        Graphviz.useEngine(new GraphvizCmdLineEngine());
+        this.parser = new Parser();
+    }
+
+    private void render(String dotLang, File outputFile, boolean directed) throws IOException {
+        MutableGraph graph = this.parser.read(dotLang);
+        graph.setDirected(directed);
+
+        Graphviz.fromGraph(graph)
+                .width(this.width)
+                .render(this.format)
+                .toFile(outputFile);
+
+    }
+
+    public void plotMatrix(int[][] matrix, String outputPath) throws IOException {
         StringBuilder dot = new StringBuilder("graph{");
 
         for (int i = 0; i < matrix.length; i++) {
@@ -24,8 +46,18 @@ public class GraphPlotter {
 
         dot.append('}');
 
-        Graphviz.useEngine(new GraphvizCmdLineEngine());
-        MutableGraph g = new Parser().read(dot.toString());
-        Graphviz.fromGraph(g).width(700).render(Format.PNG).toFile(new File(outputPath));
+        render(dot.toString(), new File(outputPath), false);
+    }
+
+    public void plotArray(int[] arr, String outputPath) throws IOException {
+        StringBuilder dot = new StringBuilder("graph{");
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            dot.append(arr[i]).append("--").append(arr[i + 1]).append(';');
+        }
+
+        dot.append('}');
+
+        render(dot.toString(), new File(outputPath), true);
     }
 }

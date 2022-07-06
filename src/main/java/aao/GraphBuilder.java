@@ -32,7 +32,10 @@ public class GraphBuilder {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(COMMA_DELIMITER);
+                Integer[] values = Arrays.stream(line.trim().split(COMMA_DELIMITER))
+                        .map(Integer::parseUnsignedInt)
+                        .toArray(Integer[]::new);
+
                 System.out.println(Arrays.toString(values));
 
                 int u = values[0];
