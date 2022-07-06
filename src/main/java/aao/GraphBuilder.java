@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class GraphBuilder {
     private static final String COMMA_DELIMITER = ",";
 
-    public static CPP fromCSV(int vertices, String path) throws Exception {
+    public static CPPSolver fromCSV(int vertices, String path) throws Exception {
         URL resource = GraphBuilder.class.getClassLoader().getResource(path);
         if (resource == null) {
             throw new IllegalArgumentException(path + " (No such file or directory)");
@@ -19,7 +19,7 @@ public class GraphBuilder {
         FileReader reader = new FileReader(file);
         BufferedReader br = new BufferedReader(reader);
 
-        CPP cpp = new CPP(vertices);
+        CPPSolver cpp = new CPPSolver(vertices);
 
         String line;
         while ((line = br.readLine()) != null) {

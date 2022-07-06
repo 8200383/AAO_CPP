@@ -9,7 +9,7 @@ import java.util.Vector;
  * @author Harold Thimbleby, 2001, 2, 3
  */
 @SuppressWarnings({"CStyleArrayDeclaration", "rawtypes", "ForLoopReplaceableByForEach", "StatementWithEmptyBody", "unchecked", "ManualArrayCopy", "ConstantConditions"})
-public class CPP {
+public class CPPSolver {
     private static final int NONE = -1; // anything < 0
     private final int N; // number of vertices
     private final int[] delta; // deltas of vertices
@@ -31,7 +31,7 @@ public class CPP {
         while (improvements()) ;
     }
 
-    public CPP(int vertices) {
+    public CPPSolver(int vertices) {
         if ((N = vertices) <= 0) throw new Error("Graph is empty");
         delta = new int[N];
         defined = new boolean[N][N];
@@ -133,7 +133,7 @@ public class CPP {
     }
 
     private boolean improvements() {
-        CPP residual = new CPP(N);
+        CPPSolver residual = new CPPSolver(N);
         for (int u = 0; u < neg.length; u++) {
             int i = neg[u];
             for (int v = 0; v < pos.length; v++) {
