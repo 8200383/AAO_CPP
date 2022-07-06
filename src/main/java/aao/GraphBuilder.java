@@ -17,9 +17,8 @@ public class GraphBuilder {
         }
 
         File file = new File(resource.toURI());
-        FileReader reader = new FileReader(file);
 
-        try (BufferedReader br = new BufferedReader(reader)) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine();
 
             String[] values = line.split(COMMA_DELIMITER);
@@ -30,16 +29,17 @@ public class GraphBuilder {
 
         int[][] matrix = new int[vertices][vertices];
 
-        try (BufferedReader br = new BufferedReader(reader)) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(COMMA_DELIMITER);
                 System.out.println(Arrays.toString(values));
 
-                int u = Integer.parseInt(values[0]);
-                int v = Integer.parseInt(values[1]);
-                int cost = Integer.parseInt(values[2]);
+                int u = values[0];
+                int v = values[1];
+                int cost = values[2];
                 matrix[u][v] = cost;
+                matrix[v][u] = cost;
             }
         }
 

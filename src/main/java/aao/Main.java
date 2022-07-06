@@ -9,6 +9,10 @@ public class Main {
     }
 
     static public void runOne(int vertices, int startAt, String path) {
+        GraphPlotter plotter = new GraphPlotter(500, Format.PNG);
+
+        System.out.println("-".repeat(50));
+
         try {
             int[][] matrix = GraphBuilder.fromCSV(path + ".csv", vertices);
 
