@@ -237,8 +237,16 @@ class ChinesePostmanSolver {
         return null;
     }
 
-    //Floyd Warshall path reconstruction
-    private LinkedList<Integer> getPath(int i, int j, int[][] next) {
+    /**
+     * Floyd Warshall path reconstruction
+     *
+     * @param from the vertex from
+     * @param to   the vertex to
+     * @param next the next sub matrix
+     * @return the reconstruction of the path
+     * @implNote Big O(n)
+     */
+    private LinkedList<Integer> getFloydWarshallPath(int from, int to, int[][] next) {
         LinkedList<Integer> path = new LinkedList<>();
         while (i != j) {
             i = next[i][j];
@@ -247,7 +255,16 @@ class ChinesePostmanSolver {
         return path;
     }
 
-    public LinkedList<Integer> performHierholzer(int[][][] costMatrix, Integer start, int[][] nextMatrix) {
+    /**
+     * Perform Hierholzer on a cost matrix
+     *
+     * @param costMatrix  the cost matrix
+     * @param startVertex the start vertex
+     * @param nextMatrix  the sub matrix
+     * @return the circuit
+     * @implNote Big O(n^3)
+     */
+    public LinkedList<Integer> performHierholzer(int[][][] costMatrix, int startVertex, int[][] nextMatrix) {
 
         int n = costMatrix.length;
 
