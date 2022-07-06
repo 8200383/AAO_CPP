@@ -34,12 +34,12 @@ class ChinesePostmanSolver {
 
         //Finds match with minimum summed weight
         LinkedList<Integer> bestMatch = this.findPerfectMatch(matchings, distance);
-        int[][][] multiGraph = this.addEdgesGraph(bestMatch, distance, costMatrix);
+        int[][][] multiGraph = this.addEdgesGraph(bestMatch, distance, this.costMatrix);
 
         LinkedList<Integer> circuit = this.performHierholzer(multiGraph, startVertex, next);
         System.out.println("Circuit: " + Arrays.toString(circuit.toArray()));
 
-        int totalCost = this.getTotalCost(circuit, costMatrix);
+        int totalCost = this.getTotalCost(circuit, this.costMatrix);
         System.out.println("Total Cost: " + totalCost);
 
         return circuit;
