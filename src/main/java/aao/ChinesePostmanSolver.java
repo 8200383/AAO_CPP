@@ -40,7 +40,7 @@ class ChinesePostmanSolver {
         // Find all matching of graph with oddVertices
         List<List<Integer>> matchings = new LinkedList<>();
         LinkedList<Integer> visited = new LinkedList<>();
-        this.findAllMatchings(matchings, (LinkedList<Integer>) oddVertices, visited); // O(n)
+        this.findAllMatchings(matchings, (LinkedList<Integer>) oddVertices, visited); // O(n^2)
 
         // Finds match with minimum summed weight
         List<Integer> bestMatch = this.findPerfectMatch(matchings, this.distance);  // O(n^2)
