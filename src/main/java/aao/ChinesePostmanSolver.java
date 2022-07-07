@@ -13,8 +13,10 @@ class ChinesePostmanSolver {
     }
 
     public List<Integer> solve(int startVertex) {
-        if (!this.checkSymmetry(this.costMatrix)) {
-            throw new IllegalArgumentException("Cannot Solve Directed Graphs...");
+        System.out.println("Eulerian: " + this.isEulerian(this.costMatrix));
+
+        if (!this.isConnected(this.costMatrix)) {
+            throw new IllegalStateException("Cannot Solve Directed Graphs...");
         }
 
         System.out.println("Graph Order: " + this.costMatrix.length);
@@ -43,6 +45,26 @@ class ChinesePostmanSolver {
         System.out.println("Total Cost: " + totalCost);
 
         return circuit;
+    }
+
+    /**
+     * Check if is eulerian
+     *
+     * @param costMatrix the cost matrix
+     * @return true if it does not have odd vertices
+     */
+    public boolean isEulerian(int[][] costMatrix) {
+        int cc = costMatrix.length;
+        if (cc == 0) return false;
+        if (cc < 2)
+            return true;
+
+        if (!this.isConnected(costMatrix)) // O(n^2)
+            return false;
+
+        LinkedList<Integer> oddVertices = this.findOddVertices(this.costMatrix);  // O(n^2)
+
+        return oddVertices.isEmpty();
     }
 
     /**
@@ -75,9 +97,10 @@ class ChinesePostmanSolver {
 
     /**
      * Finds all matching vertices on the graph with oddVertices
+     *
      * @param matchings empty list of matching vertices
-     * @param vertices list of all vertices
-     * @param visited list of visited vertices
+     * @param vertices  list of all vertices
+     * @param visited   list of visited vertices
      * @implNote Big O(n) = O(|V|)
      */
 
@@ -113,8 +136,9 @@ class ChinesePostmanSolver {
 
     /**
      * Finds the perfect match with the minimum summed weight
+     *
      * @param matchings list of matching vertices
-     * @param distance matrix of distances obtained in the Floyd-Warshall algorithm
+     * @param distance  matrix of distances obtained in the Floyd-Warshall algorithm
      * @return list of best matching vertices
      * @implNote Big O(n*n) = O(n^2) = O(|V|^2)
      */
@@ -175,7 +199,7 @@ class ChinesePostmanSolver {
      * @return true if the graph is symmetric and false if the graph is not symmetric
      * @implNote Big O(n^2) = O(|V|^2)
      */
-    public boolean checkSymmetry(int[][] costMatrix) {
+    public boolean isConnected(int[][] costMatrix) {
         int n = costMatrix.length;
 
         // O(n^2)
